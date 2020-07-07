@@ -14,6 +14,7 @@ set(${PROJECT_NAME}_SRCS
         ThirdParty/Timer-2.1/Event.cpp
         ThirdParty/Timer-2.1/Timer.cpp
         ReadStringSerial.cpp
+        FunctionGenerator.cpp
         )
 set(${PROJECT_NAME}_HDRS
         serial_publisher.h
@@ -21,6 +22,7 @@ set(${PROJECT_NAME}_HDRS
         ThirdParty/Timer-2.1/Timer.h
         helper.h
         ReadStringSerial.h
+        FunctionGenerator.h
         )
 
 ### Additional static libraries to include in the target.

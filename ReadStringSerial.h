@@ -5,20 +5,23 @@
 #ifndef SERIALPUBLISHER_READSTRINGSERIAL_H
 #define SERIALPUBLISHER_READSTRINGSERIAL_H
 #include <Arduino.h>
+#define NUM_DACS 4
+#define T2 100
 
 class ReadStringSerial {
 public:
     ReadStringSerial();
     void update();
-    String getdata();
+    int getdata(int);
+    int incomingByte[NUM_DACS];
 
 protected:
     void m_serialEvent();
 
 private:
-    String inputString_;         // a String to hold incoming data
-    bool stringComplete_;  // whether the string is complete
-    String data_;
+    bool data_arrieved_;
+    int data_;
+
 };
 
 

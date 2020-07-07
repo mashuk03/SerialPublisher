@@ -5,39 +5,40 @@
 #include "ReadStringSerial.h"
 
 ReadStringSerial::ReadStringSerial() {
-    inputString_ = "";         // a String to hold incoming data
-    stringComplete_ = false;
-    inputString_.reserve(200);
-
+    for (int i = 0; i < NUM_DACS; ++i) {
+        incomingByte[i] = 1;
+    }
+    data_arrieved_ = false;
 }
 
 void ReadStringSerial::update() {
     m_serialEvent();
-    if (stringComplete_) {
-        data_=inputString_;
-        Serial.println(inputString_);
-        // clear the string:
-        //inputString_ = "";
-        stringComplete_ = false;
-    }
+//    if(data_arrieved_)
+//    {
+//        int value = data_ - T2;
+//        int id = (data_ - value) / T2;
+//        if (id>0 && id<=NUM_DACS)
+//            incomingByte[id-1] = value;
+//        data_arrieved_ = false;
+//    }
+
 }
 
 void ReadStringSerial::m_serialEvent() {
-    while (Serial.available()) {
-        // get the new byte:
-        char inChar = (char)Serial.read();
-        // add it to the inputString:
-        inputString_ += inChar;
-        // if the incoming character is a newline, set a flag so the main loop can
-        // do something about it:
-        if (inChar == '\n') {
-            stringComplete_ = true;
-        }
+
+    if (Serial.available() > 0) {
+        // read the incoming byte:
+        data_ = (int)Serial.read();
+        if (data_>99)
+            incomingByte[1] = data_;
+        else
+            incomingByte[0] = data_;
+        data_arrieved_ = true;
     }
 
 }
 
-String ReadStringSerial::getdata() {
+int ReadStringSerial::getdata(int id) {
 
-    return data_;
+    return (id>0 && id<=NUM_DACS)?incomingByte[id-1]:-1;
 }
