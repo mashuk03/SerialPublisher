@@ -21,6 +21,8 @@ protected:
 private:
     bool data_arrieved_;
     int data_;
+    const int pwmPin1 = 12;
+    const int pwmPin2 = 13;
 
 };
 

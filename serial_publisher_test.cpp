@@ -10,7 +10,10 @@ SerialPublisher *publisher1, *publisher2, *publisher3, *publisher4;
 ReadStringSerial RSS;
 FunctionGenerator * sinWave, *cosWave;
 
-
+void serialEvent()
+{
+    RSS.update();
+}
 void setup() {
     Serial.begin(BAUD_RATE);
     while (!Serial);
@@ -24,13 +27,13 @@ void setup() {
     t.every(SENSOR_INPUT_INTERVAL, SerialPublisher::publishData, (void *)STEER_SENSOR_TWO_PIN);
 
     sinWave = new FunctionGenerator("/SINEWAVE", sin);
-    cosWave = new FunctionGenerator("/COSWAVE", cos);
+    cosWave = new FunctionGenerator("/COSWAVE", sin);
 
-    t.every(60, FunctionGenerator::callback, (void *)1);
+    t.every(51, FunctionGenerator::callback, (void *)1);
     t.every(50, FunctionGenerator::callback, (void *)2);
 }
 
 void loop() {
     t.update();
-    RSS.update();
+
 }

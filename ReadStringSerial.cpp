@@ -6,34 +6,49 @@
 
 ReadStringSerial::ReadStringSerial() {
     for (int i = 0; i < NUM_DACS; ++i) {
-        incomingByte[i] = 1;
+        incomingByte[i] = 0;
     }
     data_arrieved_ = false;
 }
 
 void ReadStringSerial::update() {
     m_serialEvent();
-//    if(data_arrieved_)
-//    {
-//        int value = data_ - T2;
-//        int id = (data_ - value) / T2;
-//        if (id>0 && id<=NUM_DACS)
-//            incomingByte[id-1] = value;
-//        data_arrieved_ = false;
-//    }
+    if(data_arrieved_)
+    {
+        if(data_<256)
+        {
+            incomingByte[0] = data_;
+            analogWrite(pwmPin1, incomingByte[0]);
+        }
+        else if(data_<512)
+        {
+            incomingByte[1] = data_ - 256;
+            analogWrite(pwmPin2, incomingByte[1]);
+        }
+        else if(data_<768)
+            incomingByte[2] = data_ - 512;
+        else if(data_<1024)
+            incomingByte[3] = data_ - 768;
+        data_arrieved_ = false;
+    }
 
 }
 
 void ReadStringSerial::m_serialEvent() {
 
-    if (Serial.available() > 0) {
-        // read the incoming byte:
-        data_ = (int)Serial.read();
-        if (data_>99)
-            incomingByte[1] = data_;
+    String inputString = "";
+    while (Serial.available()) {
+        // get the new byte:
+        char inChar = (char)Serial.read();
+        if (inChar == '\n')
+        {
+            data_arrieved_ = true;
+            data_ = inputString.toInt();
+            break;
+        }
         else
-            incomingByte[0] = data_;
-        data_arrieved_ = true;
+            // add it to the inputString:
+            inputString += inChar;
     }
 
 }
